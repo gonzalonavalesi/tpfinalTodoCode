@@ -1,9 +1,6 @@
 package com.bazar.tpfinaltodocode.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,11 +10,11 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Builder
 public class VentaResponseDTO {
-    private Long codigo_venta;
+    private Long id;
     private LocalDateTime fecha_venta;
     private BigDecimal total;
     private List<ProductoResponseDTO> listaProductos;
-    private ClienteResponseDTO unCliente;
+    private ClienteResponseDTO cliente;
 }

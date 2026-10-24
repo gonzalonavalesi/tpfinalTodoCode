@@ -1,16 +1,14 @@
 package com.bazar.tpfinaltodocode.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class VentaRequestDTO {
-    private List<Long> codigosProductos;
+    private List<Long> ListaProductos;
     private Long codigo_cliente;
 }
