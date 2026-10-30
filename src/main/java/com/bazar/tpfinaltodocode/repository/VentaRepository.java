@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 public interface VentaRepository extends JpaRepository<Venta,Long> {
+    boolean existsById(Long id);
 }

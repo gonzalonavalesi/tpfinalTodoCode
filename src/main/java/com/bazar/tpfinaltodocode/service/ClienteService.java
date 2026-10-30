@@ -8,6 +8,7 @@ import com.bazar.tpfinaltodocode.model.Cliente;
 import com.bazar.tpfinaltodocode.model.Producto;
 import com.bazar.tpfinaltodocode.repository.ClienteRepository;
 import com.bazar.tpfinaltodocode.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClienteService {
 
-    private final ProductoRepository productoRepository;
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
+
+    @Transactional
     public ClienteResponseDTO alta(ClienteRequestDTO clienteRequestDTO){
         if(clienteRepository.existsByDni(clienteRequestDTO.getDni())){
             throw new RuntimeException("ya existe un cliente con ese dni registrado");
@@ -28,6 +30,7 @@ public class ClienteService {
         return ClienteMapper.toDTO(clienteRepository.save(cliente));
     }
 
+    @Transactional
     public void baja (Long id){
         if(!(clienteRepository.existsById(id))){
             throw new RuntimeException("no existe cliente con ese id");
@@ -35,6 +38,7 @@ public class ClienteService {
         clienteRepository.deleteById(id);
     }
 
+    @Transactional
     public ClienteResponseDTO modificar(ClienteRequestDTO clienteRequestDTO, Long id){
         Cliente cliente=clienteRepository.findById(id).orElseThrow(()->new RuntimeException("cliente con esa id no existente"));
         cliente.setApellido(clienteRequestDTO.getApellido());

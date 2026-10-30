@@ -5,6 +5,7 @@ import com.bazar.tpfinaltodocode.dto.response.ProductoResponseDTO;
 import com.bazar.tpfinaltodocode.mapper.ProductoMapper;
 import com.bazar.tpfinaltodocode.model.Producto;
 import com.bazar.tpfinaltodocode.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductoService {
-    private ProductoRepository productoRepository;
+    private final ProductoRepository productoRepository;
 
+    @Transactional
     public ProductoResponseDTO crear (ProductoRequestDTO dto){
         if(productoRepository.existsByNombre(dto.getNombre())){
             throw  new RuntimeException("ya existe producto con ese nombre");
@@ -29,6 +31,7 @@ public class ProductoService {
         return ProductoMapper.toDTO(productoRepository.save(producto));
     }
 
+    @Transactional
     public void baja (Long id){
         if(!productoRepository.existsById(id)){
             throw new RuntimeException("producto no existente");
@@ -36,6 +39,7 @@ public class ProductoService {
         productoRepository.deleteById(id);
     }
 
+    @Transactional
     public ProductoResponseDTO modificar (Long id, ProductoRequestDTO dto){
         Producto producto=productoRepository.findById(id).orElseThrow(()->new RuntimeException("producto con id no existente"));
 
