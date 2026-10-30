@@ -62,4 +62,10 @@ public class ProductoService {
 
         return ProductoMapper.toDTO(producto);
     }
+
+    public List<ProductoResponseDTO>stockMayor5 (){
+        return productoRepository.findAll().stream().filter(p -> p.getCantidad_disponible()<5).map(ProductoMapper::toDTO).toList();
+    }
+
+
 }

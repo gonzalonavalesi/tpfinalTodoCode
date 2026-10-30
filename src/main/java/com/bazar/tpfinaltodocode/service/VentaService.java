@@ -1,7 +1,11 @@
 package com.bazar.tpfinaltodocode.service;
 
 import com.bazar.tpfinaltodocode.dto.request.VentaRequestDTO;
+import com.bazar.tpfinaltodocode.dto.response.MayorVentaDTO;
+import com.bazar.tpfinaltodocode.dto.response.ProductoResponseDTO;
+import com.bazar.tpfinaltodocode.dto.response.VentaReporteDTO;
 import com.bazar.tpfinaltodocode.dto.response.VentaResponseDTO;
+import com.bazar.tpfinaltodocode.mapper.ProductoMapper;
 import com.bazar.tpfinaltodocode.mapper.VentaMapper;
 import com.bazar.tpfinaltodocode.model.Cliente;
 import com.bazar.tpfinaltodocode.model.Producto;
@@ -14,9 +18,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -119,4 +126,32 @@ public class VentaService {
         }
         ventaRepository.deleteById(id);
     }
+
+    public List<ProductoResponseDTO>listaProductosXventa(Long id){
+        Venta venta=ventaRepository.findById(id).orElseThrow(()->new RuntimeException("venta inexistente"));
+
+
+        List<ProductoResponseDTO>list=new ArrayList<>();
+        for(Producto producto : venta.getListaProductos()){
+            list.add(ProductoMapper.toDTO(producto));
+        }
+        return list;
+    }
+
+    public VentaReporteDTO ventasXdia (LocalDate fecha){
+        List<Venta>ventaList=ventaRepository.findAll().stream().filter(v->v.getFecha().toLocalDate().isEqual(fecha)).toList();
+        int cantidad=ventaList.size();
+        BigDecimal sumatoria = BigDecimal.ZERO;
+        for(Venta venta : ventaList){
+            sumatoria=sumatoria.add(venta.getTotal());
+        }
+        return new VentaReporteDTO(cantidad,sumatoria);
+    }
+
+    public MayorVentaDTO mayorVenta(){
+        Venta venta=ventaRepository.findAll().stream().max(Comparator.comparing(Venta::getTotal)).orElseThrow(()->new RuntimeException("no hay ventas"));
+
+        return new MayorVentaDTO(venta.getId(),venta.getTotal(),venta.getListaProductos().size(),venta.getCliente().getNombre(),venta.getCliente().getApellido());
+    }
+
 }
