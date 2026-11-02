@@ -62,13 +62,6 @@ public class VentaService {
         return VentaMapper.toDTO(ventaRepository.save(venta));
     }
 
-    @Transactional
-    public void baja (Long id){
-        if(!(ventaRepository.existsById(id))){
-            throw new RuntimeException("venta no existe");
-        }
-        ventaRepository.deleteById(id);
-    }
 
     public VentaResponseDTO modificar(VentaRequestDTO dto, Long id){
         Venta venta=ventaRepository.findById(id).orElseThrow(()->new RuntimeException("venta no existe"));
